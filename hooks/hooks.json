@@ -1,0 +1,28 @@
+{
+  "description": "AFRS: load the reading rules at session start and add a one-line reminder each turn.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/afrs.sh\" session claude",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/afrs.sh\" turn claude",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

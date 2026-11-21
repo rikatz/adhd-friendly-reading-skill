@@ -1,0 +1,29 @@
+{
+  "description": "AFRS: load the reading rules at session start (unless AGENTS.md already has them) and add a one-line reminder each turn.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$HOME/.afrs/afrs.sh\" session codex",
+            "timeout": 10,
+            "statusMessage": "Loading AFRS reading format"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$HOME/.afrs/afrs.sh\" turn codex",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -255,6 +255,6 @@ F. Xavier Castellanos; research on ADHD and reading comprehension (Miller et al.
 2013, and others); the CBT trial of Steven Safren and colleagues (2010);
 implementation-intention studies by Caterina Gawrilow and Peter Gollwitzer;
 Richard Mayer's multimedia learning principles; W3C WCAG and COGA; and
-ISO 24495-1 (plain language). BeeLine Reader inspired the project, and an
-independent evaluation of it (Koornneef & Kraal, 2022) shaped the decision not
+ISO 24495-1 (plain language). BeeLine Reader and the `i-have-adhd` skill
+inspired the project, and an independent evaluation of BeeLine (Koornneef & Kraal, 2022) shaped the decision not
 to use color. Full citations: [references/sources.md](references/sources.md).

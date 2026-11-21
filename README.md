@@ -6,8 +6,9 @@
 informed by ADHD and reading research, that make ChatGPT,
 Claude Code and OpenAI Codex present long and technical answers in a format that
 is easier to follow for people with ADHD. It keeps every detail. It changes the
-order, the chunking and the signposting, not the content. Nothing to run or
-install besides copying text files.
+order, the chunking and the signposting, not the content. You never have to
+call it: it turns on by itself. The core is plain Markdown; an optional plugin
+adds a tiny shell script so the format survives long sessions.
 
 **This covers:** 1) What it does · 2) Install · 3) Use and customize · 4) Files ·
 5) Evidence and limits
@@ -39,10 +40,32 @@ See the before/after examples in [`examples/`](examples/).
 
 ## 2/5 — Install
 
-First, download this repository (green **Code** button → **Download ZIP**, or
-`git clone`). Then pick your platform.
+First, download this repository: <https://github.com/rikatz/adhd-friendly-reading-skill> (green **Code**
+button → **Download ZIP**, or `git clone https://github.com/rikatz/adhd-friendly-reading-skill.git`). Then pick your platform.
 
-### Claude Code
+### Claude Code — option A: plugin (recommended)
+
+Inside Claude Code, run:
+
+```text
+/plugin marketplace add rikatz/adhd-friendly-reading-skill
+/plugin install afrs@afrs
+```
+
+On Claude Code 2.1.275 or later this also works in one step:
+`/plugin install afrs --marketplace rikatz/adhd-friendly-reading-skill`.
+
+The plugin includes the skill and two small hooks:
+
+- **At session start** (and after `/clear` or compaction) it loads the AFRS
+  rules, unless your `CLAUDE.md` already contains them.
+- **On every message** it adds a one-line reminder (about 50 tokens), so the
+  format doesn't fade in long sessions.
+
+Turn it off or on for every session with `/afrs:toggle off` and
+`/afrs:toggle on`. In a single conversation you can still just say "AFRS off".
+
+### Claude Code — option B: manual, Markdown only
 
 ```bash
 # 1. The skill (full rules + templates)
@@ -69,6 +92,20 @@ cat platforms/codex/AGENTS.md >> ~/.codex/AGENTS.md
 
 Restart Codex. Call the skill explicitly with `$adhd-friendly-reading`.
 
+**Optional: the per-turn reminder hook for Codex.** Codex plugins can only carry
+hooks in the desktop app, so for the CLI this uses your personal hooks file:
+
+```bash
+mkdir -p ~/.afrs
+cp hooks/afrs.sh platforms/codex/AGENTS.md ~/.afrs/
+cp platforms/codex/hooks/hooks.json ~/.codex/hooks.json   # if you already have one, merge the two "hooks" entries instead
+```
+
+Then run `/hooks` in Codex (or **Settings → Hooks** in the desktop app) to
+review and trust the two AFRS hooks: Codex skips new hooks until you trust
+them. Turn the reminder off or on with `sh ~/.afrs/afrs.sh off` and
+`sh ~/.afrs/afrs.sh on`.
+
 > **Run the append (`>>`) step only once.** Running it twice duplicates the block.
 >
 > **Only one project?** For Claude Code, put the rules in `CLAUDE.local.md` at the
@@ -84,7 +121,9 @@ Restart Codex. Call the skill explicitly with `$adhd-friendly-reading`.
 > (in Windows PowerShell 5.1, `>>` writes UTF-16 and corrupts the file).
 >
 > **Prefer not to tell the AI you have ADHD?** Replace "The reader has ADHD." in
-> the rules with "The reader prefers formatting that is easy to track." It works
+> the rules (in your `CLAUDE.md`/`AGENTS.md`, or in
+> `platforms/claude-code/CLAUDE.md` before installing the plugin from your own
+> copy) with "The reader prefers formatting that is easy to track." It works
 > the same.
 
 ### ChatGPT
@@ -125,9 +164,12 @@ example:
 summary: on | map: off | recaps: off | progress: on | diagrams: on | bold: on | examples: on
 ```
 
-**Using it alongside `i-have-adhd`:** that skill makes answers terse and
-action-first, while AFRS keeps full depth. They are complementary but conflict
-if both are on. Turn one off, or tell the assistant which one wins.
+**AFRS and `i-have-adhd`:** [`i-have-adhd`](https://github.com/ayghri/i-have-adhd)
+was an inspiration for AFRS. It shapes answers to be short and action-first,
+which works well for quick tasks. AFRS covers a different moment: long and
+technical answers that must keep all their detail. Because the two aim at
+different goals, using both at once can give the assistant mixed signals; pick
+the one that fits what you're doing, or tell the assistant which to follow.
 
 ---
 
@@ -137,6 +179,9 @@ if both are on. Turn one off, or tell the assistant which one wins.
 afrs/
 ├── README.md                         this file (English)
 ├── README.pt-BR.md                   Portuguese (Brazil)
+├── .claude-plugin/                   Claude Code plugin + marketplace manifests
+├── hooks/                            plugin hooks: hooks.json + afrs.sh (POSIX sh)
+├── commands/toggle.md                /afrs:toggle on|off|status
 ├── skills/
 │   └── adhd-friendly-reading/        the skill: same folder for all platforms
 │       ├── SKILL.md                  full rules
@@ -147,6 +192,7 @@ afrs/
 ├── platforms/
 │   ├── claude-code/CLAUDE.md         always-on rules for Claude Code
 │   ├── codex/AGENTS.md               always-on rules for Codex
+│   ├── codex/hooks/hooks.json        optional Codex hooks (personal hooks file)
 │   └── chatgpt/CHATGPT.md            setup guide + text to paste in ChatGPT
 ├── examples/                         before/after comparisons
 └── docs/
@@ -230,7 +276,7 @@ indirect (no rule has been tested with ADHD readers). Full discussion:
 
 ### Reading aids evaluated (and why some were not adopted)
 
-- BeeLine Reader (Nick Lum and colleagues): the original idea of line-guiding color gradients that inspired this project. <https://www.beelinereader.com/>
+- BeeLine Reader (Nick Lum and colleagues): the original idea of line-guiding color gradients, and the starting point of this project. It remains a good option for readers who find gradients helpful, alongside AFRS. <https://www.beelinereader.com/>
 - Koornneef, A. & Kraal, A. (2022). Does BeeLine Reader's gradient-coloured font improve the readability of digital texts for beginning readers? *Computers in Human Behavior Reports*, 6, 100197. <https://doaj.org/article/b48617b6416f4030ae9bf57ab79d1318>
 - Klein, B. (2014). Reading Bee-tween the Lines: BeeLine Reader and Spritz raise research questions. *The Psych Report*, republished by *Behavioral Scientist*. <https://behavioralscientist.org/speed-reading-apps-open-research-questions/>
 - Snell, J. (2024). No, Bionic Reading does not work. *Acta Psychologica*, 247, 104304. <https://pubmed.ncbi.nlm.nih.gov/38723450/>
@@ -250,7 +296,7 @@ indirect (no rule has been tested with ADHD readers). Full discussion:
 
 ### Related work
 
-- `i-have-adhd` skill by ayghri, loosely based on *The Adult ADHD Tool Kit* by J. Russell Ramsay and Anthony L. Rostain. A complementary approach that favors terse, action-first answers. <https://github.com/ayghri/i-have-adhd>
+- `i-have-adhd` by ayghri: an inspiration for this project. It shapes AI answers to be short and action-first, drawing on *The Adult ADHD Tool Kit* by J. Russell Ramsay and Anthony L. Rostain. AFRS builds on that idea for a case it doesn't aim to cover: long, technical answers that need to keep their full depth. <https://github.com/ayghri/i-have-adhd>
 - Neurodivergent Insights (blog). Interest-based nervous system: notes that Dodson's framework comes from clinical practice rather than research. <https://neurodivergentinsights.com/interest-based-nervous-system/>
 - The open Agent Skills format, supported by Claude Code, OpenAI Codex and ChatGPT.
 

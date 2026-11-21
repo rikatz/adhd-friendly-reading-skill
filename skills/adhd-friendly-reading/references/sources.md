@@ -46,7 +46,7 @@ Full discussion: `docs/RESEARCH.md` in the AFRS repository.
 
 ## Reading aids evaluated (and why some were not adopted)
 
-- BeeLine Reader (Nick Lum and colleagues): the original idea of line-guiding color gradients that inspired this project. <https://www.beelinereader.com/>
+- BeeLine Reader (Nick Lum and colleagues): the original idea of line-guiding color gradients, and the starting point of this project. It remains a good option for readers who find gradients helpful, alongside AFRS. <https://www.beelinereader.com/>
 - Koornneef, A. & Kraal, A. (2022). Does BeeLine Reader's gradient-coloured font improve the readability of digital texts for beginning readers? *Computers in Human Behavior Reports*, 6, 100197. <https://doaj.org/article/b48617b6416f4030ae9bf57ab79d1318>
 - Klein, B. (2014). Reading Bee-tween the Lines: BeeLine Reader and Spritz raise research questions. *The Psych Report*, republished by *Behavioral Scientist*. <https://behavioralscientist.org/speed-reading-apps-open-research-questions/>
 - Snell, J. (2024). No, Bionic Reading does not work. *Acta Psychologica*, 247, 104304. <https://pubmed.ncbi.nlm.nih.gov/38723450/>
@@ -66,6 +66,6 @@ Full discussion: `docs/RESEARCH.md` in the AFRS repository.
 
 ## Related work
 
-- `i-have-adhd` skill by ayghri, loosely based on *The Adult ADHD Tool Kit* by J. Russell Ramsay and Anthony L. Rostain. A complementary approach that favors terse, action-first answers. <https://github.com/ayghri/i-have-adhd>
+- `i-have-adhd` by ayghri: an inspiration for this project. It shapes AI answers to be short and action-first, drawing on *The Adult ADHD Tool Kit* by J. Russell Ramsay and Anthony L. Rostain. AFRS builds on that idea for a case it doesn't aim to cover: long, technical answers that need to keep their full depth. <https://github.com/ayghri/i-have-adhd>
 - Neurodivergent Insights (blog). Interest-based nervous system: notes that Dodson's framework comes from clinical practice rather than research. <https://neurodivergentinsights.com/interest-based-nervous-system/>
 - The open Agent Skills format, supported by Claude Code, OpenAI Codex and ChatGPT.

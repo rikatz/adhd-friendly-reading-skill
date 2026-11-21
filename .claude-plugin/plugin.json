@@ -1,0 +1,19 @@
+{
+  "name": "afrs",
+  "displayName": "ADHD-Friendly Reading System",
+  "version": "1.1.0",
+  "description": "Formats long and technical answers so they are easier to follow for people with ADHD, without cutting content. Always on: no need to call it.",
+  "author": {
+    "name": "AFRS contributors"
+  },
+  "homepage": "https://github.com/rikatz/adhd-friendly-reading-skill",
+  "repository": "https://github.com/rikatz/adhd-friendly-reading-skill",
+  "license": "MIT",
+  "keywords": [
+    "adhd",
+    "accessibility",
+    "readability",
+    "documentation",
+    "neurodiversity"
+  ]
+}

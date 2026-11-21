@@ -2,12 +2,14 @@
 
 [English](README.md)
 
-**Resumo:** o AFRS é um conjunto de instruções em Markdown puro, orientado por
+**Resumo:** o AFRS é um conjunto de instruções em Markdown, orientado por
 pesquisas sobre TDAH e leitura, que faz o
 ChatGPT, o Claude Code e o OpenAI Codex apresentarem respostas longas e técnicas
 num formato mais fácil de acompanhar para pessoas com TDAH. Todos os detalhes
 continuam lá. O que muda é a ordem, a divisão em blocos e a sinalização, não o
-conteúdo. Não há nada para executar nem instalar: basta copiar arquivos de texto.
+conteúdo. Você nunca precisa chamá-lo: ele liga sozinho. O núcleo é Markdown
+puro; um plugin opcional adiciona um pequeno script de shell para que o formato
+se mantenha em sessões longas.
 
 **Neste texto:** 1) O que faz · 2) Instalação · 3) Uso e personalização ·
 4) Arquivos · 5) Evidências e limites
@@ -43,10 +45,32 @@ Veja os exemplos de antes/depois em [`examples/`](examples/).
 
 ## 2/5 — Instalação
 
-Primeiro, baixe este repositório (botão verde **Code** → **Download ZIP**, ou
-`git clone`). Depois escolha a sua plataforma.
+Primeiro, baixe este repositório: <https://github.com/rikatz/adhd-friendly-reading-skill> (botão verde
+**Code** → **Download ZIP**, ou `git clone https://github.com/rikatz/adhd-friendly-reading-skill.git`). Depois escolha a sua plataforma.
 
-### Claude Code
+### Claude Code — opção A: plugin (recomendada)
+
+Dentro do Claude Code, rode:
+
+```text
+/plugin marketplace add rikatz/adhd-friendly-reading-skill
+/plugin install afrs@afrs
+```
+
+No Claude Code 2.1.275 ou mais recente também funciona em um passo só:
+`/plugin install afrs --marketplace rikatz/adhd-friendly-reading-skill`.
+
+O plugin inclui a skill e dois pequenos hooks:
+
+- **No início da sessão** (e depois de `/clear` ou da compactação), ele carrega
+  as regras do AFRS, a menos que o seu `CLAUDE.md` já as tenha.
+- **A cada mensagem**, ele adiciona um lembrete de uma linha (cerca de 50
+  tokens), para o formato não se perder em sessões longas.
+
+Para desligar ou ligar em todas as sessões, use `/afrs:toggle off` e
+`/afrs:toggle on`. Numa conversa específica, você ainda pode só dizer "AFRS off".
+
+### Claude Code — opção B: manual, só Markdown
 
 ```bash
 # 1. A skill (regras completas + modelos)
@@ -74,6 +98,21 @@ cat platforms/codex/AGENTS.md >> ~/.codex/AGENTS.md
 
 Reinicie o Codex. Para chamar a skill explicitamente, use `$adhd-friendly-reading`.
 
+**Opcional: o hook de lembrete a cada mensagem no Codex.** Plugins do Codex só
+levam hooks no app desktop, então, para o CLI, isto usa o seu arquivo pessoal de
+hooks:
+
+```bash
+mkdir -p ~/.afrs
+cp hooks/afrs.sh platforms/codex/AGENTS.md ~/.afrs/
+cp platforms/codex/hooks/hooks.json ~/.codex/hooks.json   # se você já tiver um, junte as duas entradas de "hooks"
+```
+
+Depois rode `/hooks` no Codex (ou **Settings → Hooks** no app desktop) para
+revisar e confiar nos dois hooks do AFRS: o Codex ignora hooks novos até você
+confiar neles. Para desligar ou ligar o lembrete, use `sh ~/.afrs/afrs.sh off` e
+`sh ~/.afrs/afrs.sh on`.
+
 > **Rode o passo de anexar (`>>`) só uma vez.** Rodar duas vezes duplica o bloco.
 >
 > **Só para um projeto?** No Claude Code, coloque as regras em `CLAUDE.local.md`
@@ -89,7 +128,8 @@ Reinicie o Codex. Para chamar a skill explicitamente, use `$adhd-friendly-readin
 > (no Windows PowerShell 5.1, `>>` grava em UTF-16 e corrompe o arquivo).
 >
 > **Prefere não contar à IA que tem TDAH?** Troque "The reader has ADHD." nas
-> regras por "The reader prefers formatting that is easy to track." Funciona do
+> regras (no seu `CLAUDE.md`/`AGENTS.md`, ou em `platforms/claude-code/CLAUDE.md`
+> antes de instalar o plugin a partir da sua própria cópia) por "The reader prefers formatting that is easy to track." Funciona do
 > mesmo jeito.
 
 ### ChatGPT
@@ -130,10 +170,13 @@ recapitulações" etc.). Por exemplo:
 summary: on | map: off | recaps: off | progress: on | diagrams: on | bold: on | examples: on
 ```
 
-**Usando junto com a `i-have-adhd`:** essa skill deixa as respostas curtas e
-focadas na próxima ação. O AFRS mantém toda a profundidade. Elas se complementam,
-mas conflitam se as duas estiverem ligadas ao mesmo tempo. Desligue uma ou diga
-ao assistente qual deve prevalecer.
+**O AFRS e a `i-have-adhd`:** a [`i-have-adhd`](https://github.com/ayghri/i-have-adhd)
+foi uma inspiração para o AFRS. Ela deixa as respostas curtas e focadas na
+próxima ação, o que funciona muito bem em tarefas rápidas. O AFRS cobre outro
+momento: respostas longas e técnicas que precisam manter todos os detalhes. Como
+as duas têm objetivos diferentes, usá-las ao mesmo tempo pode confundir o
+assistente; escolha a que combina com o que você está fazendo, ou diga ao
+assistente qual seguir.
 
 ---
 
@@ -143,6 +186,9 @@ ao assistente qual deve prevalecer.
 afrs/
 ├── README.md                         documentação (inglês)
 ├── README.pt-BR.md                   este arquivo
+├── .claude-plugin/                   manifestos do plugin e do marketplace (Claude Code)
+├── hooks/                            hooks do plugin: hooks.json + afrs.sh (POSIX sh)
+├── commands/toggle.md                /afrs:toggle on|off|status
 ├── skills/
 │   └── adhd-friendly-reading/        a skill: a mesma pasta serve para as três plataformas
 │       ├── SKILL.md                  regras completas
@@ -153,6 +199,7 @@ afrs/
 ├── platforms/
 │   ├── claude-code/CLAUDE.md         regras sempre ativas para o Claude Code
 │   ├── codex/AGENTS.md               regras sempre ativas para o Codex
+│   ├── codex/hooks/hooks.json        hooks opcionais do Codex (arquivo pessoal de hooks)
 │   └── chatgpt/CHATGPT.md            guia + textos para colar no ChatGPT
 ├── examples/                         comparações antes/depois
 └── docs/
@@ -236,7 +283,7 @@ Discussão completa (em inglês): [`docs/RESEARCH.md`](docs/RESEARCH.md).
 
 ### Ferramentas de leitura avaliadas (e por que algumas não foram adotadas)
 
-- BeeLine Reader (Nick Lum e colegas): a ideia original de gradientes de cor que guiam a leitura entre linhas, que inspirou este projeto. <https://www.beelinereader.com/>
+- BeeLine Reader (Nick Lum e colegas): a ideia original de gradientes de cor que guiam a leitura entre linhas, e o ponto de partida deste projeto. Continua sendo uma boa opção, junto com o AFRS, para quem se dá bem com gradientes. <https://www.beelinereader.com/>
 - Koornneef, A. & Kraal, A. (2022). Does BeeLine Reader's gradient-coloured font improve the readability of digital texts for beginning readers? *Computers in Human Behavior Reports*, 6, 100197. <https://doaj.org/article/b48617b6416f4030ae9bf57ab79d1318>
 - Klein, B. (2014). Reading Bee-tween the Lines: BeeLine Reader and Spritz raise research questions. *The Psych Report*, republished by *Behavioral Scientist*. <https://behavioralscientist.org/speed-reading-apps-open-research-questions/>
 - Snell, J. (2024). No, Bionic Reading does not work. *Acta Psychologica*, 247, 104304. <https://pubmed.ncbi.nlm.nih.gov/38723450/>
@@ -256,7 +303,7 @@ Discussão completa (em inglês): [`docs/RESEARCH.md`](docs/RESEARCH.md).
 
 ### Trabalhos relacionados
 
-- Skill `i-have-adhd`, de ayghri, baseada livremente em *The Adult ADHD Tool Kit*, de J. Russell Ramsay e Anthony L. Rostain. Uma abordagem complementar, que favorece respostas curtas e focadas na próxima ação. <https://github.com/ayghri/i-have-adhd>
+- `i-have-adhd`, de ayghri: uma inspiração para este projeto. Ela deixa as respostas da IA curtas e focadas na próxima ação, com base em *The Adult ADHD Tool Kit*, de J. Russell Ramsay e Anthony L. Rostain. O AFRS parte dessa ideia para um caso que ela não pretende cobrir: respostas longas e técnicas que precisam manter toda a profundidade. <https://github.com/ayghri/i-have-adhd>
 - Neurodivergent Insights (blog). Interest-based nervous system: observa que o modelo de Dodson vem da prática clínica, não de pesquisa. <https://neurodivergentinsights.com/interest-based-nervous-system/>
 - O formato aberto Agent Skills, compatível com o Claude Code, o OpenAI Codex e o ChatGPT.
 

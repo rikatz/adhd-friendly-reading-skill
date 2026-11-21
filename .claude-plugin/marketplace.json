@@ -1,0 +1,14 @@
+{
+  "name": "afrs",
+  "description": "ADHD-Friendly Reading System: an always-on reading format for long and technical answers, informed by ADHD and reading research.",
+  "owner": {
+    "name": "AFRS contributors"
+  },
+  "plugins": [
+    {
+      "name": "afrs",
+      "source": "./",
+      "description": "ADHD-Friendly Reading System: always-on reading format for long and technical answers."
+    }
+  ]
+}
