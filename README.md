@@ -45,12 +45,20 @@ button → **Download ZIP**, or `git clone https://github.com/rikatz/adhd-friend
 
 ### Claude Code — option A: plugin (recommended)
 
-Inside Claude Code, run:
+Inside Claude Code, run these two commands one at a time (paste one, press
+Enter, then the next):
 
-```text
-/plugin marketplace add rikatz/adhd-friendly-reading-skill
-/plugin install afrs@afrs
-```
+1. Add the marketplace:
+
+   ```text
+   /plugin marketplace add rikatz/adhd-friendly-reading-skill
+   ```
+
+2. Install the plugin:
+
+   ```text
+   /plugin install afrs@afrs
+   ```
 
 On Claude Code 2.1.275 or later this also works in one step:
 `/plugin install afrs --marketplace rikatz/adhd-friendly-reading-skill`.

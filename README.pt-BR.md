@@ -50,12 +50,20 @@ Primeiro, baixe este repositório: <https://github.com/rikatz/adhd-friendly-read
 
 ### Claude Code — opção A: plugin (recomendada)
 
-Dentro do Claude Code, rode:
+Dentro do Claude Code, rode estes dois comandos, um de cada vez (cole um, aperte
+Enter, depois o outro):
 
-```text
-/plugin marketplace add rikatz/adhd-friendly-reading-skill
-/plugin install afrs@afrs
-```
+1. Adicione o marketplace:
+
+   ```text
+   /plugin marketplace add rikatz/adhd-friendly-reading-skill
+   ```
+
+2. Instale o plugin:
+
+   ```text
+   /plugin install afrs@afrs
+   ```
 
 No Claude Code 2.1.275 ou mais recente também funciona em um passo só:
 `/plugin install afrs --marketplace rikatz/adhd-friendly-reading-skill`.
